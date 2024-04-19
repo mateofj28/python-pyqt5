@@ -121,7 +121,8 @@ class GoodsManagementWindow(QWidget):
                 'name': name,
                 'category': category,
                 'status': status,
-                'desc': description
+                'desc': description,
+                'assigned': False
             }
 
             if not self.collection.find_one({'license': license}):
@@ -208,6 +209,9 @@ class GoodsManagementWindow(QWidget):
             self.modify_button.setEnabled(True)
             self.plate_input.setEnabled(False)
 
+            if self.goods['assigned'] == True:
+                self.status_combobox.setEnabled(False)
+
             self.plate_input.setText(self.goods['license'])
             self.name_input.setText(self.goods['name'])
             self.category_input.setText(self.goods['category'])
@@ -226,6 +230,7 @@ class GoodsManagementWindow(QWidget):
         self.plate_input.setEnabled(True)
         self.delete_button.setEnabled(False)
         self.modify_button.setEnabled(False)
+        self.status_combobox.setEnabled(True)
         self.goods = {}
 
     def return_to_previous_window(self):

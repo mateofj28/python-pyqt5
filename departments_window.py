@@ -37,7 +37,7 @@ class DepartmentManagementWindow(QWidget):
         self.manager_label = QLabel('Jefe:', self)
         self.manager_label.setGeometry(50, 100, 100, 30)
         self.manager_combobox = QComboBox(self)
-        self.llenar_jefes()
+        self.llenar_jefes() # metodo que llena el combo box
         self.manager_combobox.setGeometry(150, 100, 200, 30)
 
         # Botones

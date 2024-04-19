@@ -127,6 +127,7 @@ class EmployeeManagementWindow(QWidget):
                 'position': position,
                 'startDate': startDate,
                 'isHead': isHead,
+                'goods': []
             }
 
             if not self.collection.find_one({'identification': identification}):
