@@ -22,6 +22,7 @@ class ToAssignToAllocateGoodWindow(QWidget):
         
         self.setGeometry(100, 100, 700, 400)
         self.empleado_a_desligar = {}
+        self.nombre_bien = ""
         
         # Etiqueta y menú desplegable para seleccionar empleado
         self.lbl_empleado = QLabel('Seleccionar empleado:', self)
@@ -48,6 +49,7 @@ class ToAssignToAllocateGoodWindow(QWidget):
         self.lbl_bienes_asignados.setGeometry(20, 130, 150, 20)
         # Lista para mostrar bienes asignados
         self.lst_bienes_asignados = QListWidget(self)
+        self.lst_bienes_asignados.itemClicked.connect(self.handle_item_click)
         
         self.lst_bienes_asignados.setGeometry(20, 160, 300, 150)
 
@@ -67,11 +69,17 @@ class ToAssignToAllocateGoodWindow(QWidget):
         self.btn_return.setGeometry(200, 360, 150, 30)
         self.btn_return.clicked.connect(self.regresar)
 
+        self.btn_delete_good = QPushButton('Eliminar bien', self)
+        self.btn_delete_good.setGeometry(400, 360, 150, 30)
+        self.btn_delete_good.clicked.connect(self.desligar_bien)
+
         # Botón para desligar bienes
         self.btn_desligar = QPushButton('Desligar Bien(es)', self)
         self.btn_desligar.setGeometry(20, 360, 150, 30)
         self.btn_desligar.clicked.connect(self.desligar_bienes)
         
+    def handle_item_click(self, item):
+        self.nombre_bien = item.text()
         
     
     def asignar_bien(self):
@@ -141,6 +149,40 @@ class ToAssignToAllocateGoodWindow(QWidget):
         self.cmb_empleado.setCurrentIndex(0)    
         self.cmb_bien.setCurrentIndex(0)
         self.cmb_empleado_desligar.setCurrentIndex(1)
+
+    def desligar_bien(self):
+        empleado = self.empleado_a_desligar
+        name_good = self.nombre_bien
+
+        print(empleado)
+
+        for good in empleado['goods']:
+            if good['name'] == name_good:
+                self.collection.replace_one(
+                    {'license': good['license']},
+                    {
+                    'license': good['license'],
+                        'name': good['name'],
+                        'category': good['category'],
+                        'status': good['status'],
+                        'desc': good['desc'],
+                        'assigned': False,
+                        'employe': None 
+                    }    
+                )
+
+                empleado['goods'].remove(good)
+
+                self.collectionEmploye.replace_one(
+                    {'identification': empleado['identification']},
+                    empleado    
+                )
+        
+        self.nombre_bien = ""
+        self.llenar_bienes_asignados(0)
+        self.llenar_bienes()
+
+
         
     
     def desligar_bienes(self):
